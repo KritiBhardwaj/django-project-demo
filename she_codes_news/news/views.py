@@ -33,4 +33,15 @@ class AddStoryView(generic.CreateView):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
+class ViewAuthorStories(generic.ListView):
+    template_name = 'news/viewAuthorStory.html'
+
+    def get_queryset(self):
+        return NewsStory.objects.all()
+
+    def get_contect_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['author_stories'] = NewsStory.objects.filter(author=self.kwargs.get("author")).order_by('-pub_date')
+        return context
+        
 
